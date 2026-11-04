@@ -22,6 +22,8 @@ def address(value, label):
 def integer(value, label):
     if isinstance(value, bool) or not isinstance(value, (int, str)):
         raise ValueError(f"{label} must be an integer or decimal string")
+    if isinstance(value, str) and not re.fullmatch(r"[0-9]+", value):
+        raise ValueError(f"{label} must be a decimal integer")
     try:
         result = int(value, 10) if isinstance(value, str) else value
     except ValueError as exc:
