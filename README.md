@@ -10,7 +10,7 @@ Requires Python 3.10 or newer. No packages or network access are needed.
 python .\permit_safety_checker.py .\example-permit.json
 ```
 
-Use only with decoded EIP-2612 JSON shaped like the included example. The allowance is shown in raw token units because token decimals are not checked.
+Use only with decoded EIP-2612 JSON shaped like the included example. Integer strings must contain decimal digits only. Zero addresses are called out for review. The allowance is shown in raw token units because token decimals are not checked.
 
 ## Limits
 

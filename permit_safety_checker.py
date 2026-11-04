@@ -11,6 +11,7 @@ from pathlib import Path
 
 ADDRESS = re.compile(r"0x[0-9a-fA-F]{40}\Z")
 UINT256_MAX = 2**256 - 1
+ZERO_ADDRESS = "0x" + "0" * 40
 
 
 def address(value, label):
@@ -60,6 +61,12 @@ def inspect(data, now):
         f"Nonce: {nonce}",
         f"Deadline: {expiry}",
     ]
+    zero_fields = [
+        label for label, candidate in (("token contract", token), ("owner", owner), ("spender", spender))
+        if candidate.lower() == ZERO_ADDRESS
+    ]
+    if zero_fields:
+        lines.append("Review: zero address in " + ", ".join(zero_fields) + "; verify these permit fields before signing.")
     if value == UINT256_MAX:
         lines.append("Risk: maximum uint256 allowance; the spender may use the full token balance until revoked or otherwise changed.")
     if deadline <= now:
