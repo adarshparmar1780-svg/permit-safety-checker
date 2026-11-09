@@ -73,6 +73,8 @@ def inspect(data, now):
         f"Nonce: {nonce}",
         f"Deadline: {expiry}",
     ]
+    if chain_id == 0:
+        lines.append("Review: chain ID is zero; confirm this permit domain matches the intended network.")
     zero_fields = [
         label for label, candidate in (("token contract", token), ("owner", owner), ("spender", spender))
         if candidate.lower() == ZERO_ADDRESS

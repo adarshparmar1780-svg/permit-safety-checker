@@ -35,6 +35,11 @@ class PermitSafetyTests(unittest.TestCase):
     def test_flags_maximum_allowance(self):
         self.assertIn("maximum uint256 allowance", inspect(permit(str(UINT256_MAX)), 1))
 
+    def test_warns_for_zero_chain_id(self):
+        data = permit()
+        data["domain"]["chainId"] = 0
+        self.assertIn("chain ID is zero", inspect(data, 1))
+
     def test_flags_zero_address_fields(self):
         data = permit()
         data["message"]["spender"] = "0x" + "0" * 40
