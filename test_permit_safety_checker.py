@@ -27,6 +27,11 @@ class PermitSafetyTests(unittest.TestCase):
         self.assertIn("Allowance: 42 raw token units", report)
         self.assertIn("not expired", report)
 
+    def test_handles_uint256_deadline_beyond_datetime_range(self):
+        report = inspect(permit(deadline=str(UINT256_MAX)), 1)
+        self.assertIn(f"Unix timestamp {UINT256_MAX} (outside supported datetime range)", report)
+        self.assertIn("not expired", report)
+
     def test_flags_maximum_allowance(self):
         self.assertIn("maximum uint256 allowance", inspect(permit(str(UINT256_MAX)), 1))
 

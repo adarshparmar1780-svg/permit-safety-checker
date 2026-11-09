@@ -59,7 +59,10 @@ def inspect(data, now):
     nonce = integer(message.get("nonce"), "message.nonce")
     deadline = integer(message.get("deadline"), "message.deadline")
 
-    expiry = datetime.fromtimestamp(deadline, timezone.utc).isoformat() if deadline else "Unix timestamp 0"
+    try:
+        expiry = datetime.fromtimestamp(deadline, timezone.utc).isoformat() if deadline else "Unix timestamp 0"
+    except (OverflowError, OSError, ValueError):
+        expiry = f"Unix timestamp {deadline} (outside supported datetime range)"
     lines = [
         "EIP-2612 permit review (decoded fields only)",
         f"Token contract: {token}",
