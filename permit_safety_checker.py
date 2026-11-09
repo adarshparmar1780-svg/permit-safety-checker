@@ -14,6 +14,15 @@ UINT256_MAX = 2**256 - 1
 ZERO_ADDRESS = "0x" + "0" * 40
 
 
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key!r}")
+        result[key] = value
+    return result
+
+
 def address(value, label):
     if not isinstance(value, str) or not ADDRESS.fullmatch(value):
         raise ValueError(f"{label} must be a 0x-prefixed 20-byte address")
@@ -86,7 +95,7 @@ def main():
     parser.add_argument("json_file", type=Path, help="path to a JSON file containing domain and message fields")
     args = parser.parse_args()
     try:
-        data = json.loads(args.json_file.read_text(encoding="utf-8"))
+        data = json.loads(args.json_file.read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
         print(inspect(data, int(datetime.now(timezone.utc).timestamp())))
     except (OSError, json.JSONDecodeError, ValueError, OverflowError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
